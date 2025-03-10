@@ -43,7 +43,7 @@ const Footer = () => {
             {/* Language Selector */}
             <select className="bg-gray-800 border border-gray-600 px-2 py-1 rounded text-white">
               <option>English</option>
-              <option>French</option>
+              {/* <option>French</option> */}
             </select>
   
             {/* Copyright and Links */}

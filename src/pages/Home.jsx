@@ -84,7 +84,7 @@ const Home = () => {
 
     {/* Campaign Cards - Desktop View */}
     <div className="text-center mb-6">
-          <h3 className="text-3xl font-bold text-gray-800">Active Campaigns</h3>
+          <h3 className="text-3xl font-bold mb-2 text-gray-800">Active Campaigns</h3>
           <button className="w-60 h-10 bg-white border-2 border-indigo-500 text-indigo-500 px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:bg-indigo-500 hover:text-white">
             Browse All Campaigns
           </button>

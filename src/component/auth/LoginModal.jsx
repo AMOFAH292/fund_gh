@@ -19,6 +19,11 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   if (!isOpen && !isSignUpOpen) return null;
 
+  const signUp = (e) =>{
+e.target.value
+
+  }
+
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-opacity-50 z-50">
       {/* Login Modal */}
@@ -99,7 +104,9 @@ const LoginModal = ({ isOpen, onClose }) => {
         >
           <button
             className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-            onClick={() => setIsSignUpOpen(false)}
+            onClick={() => {setIsSignUpOpen(false);
+              
+            }}
           >
             ✕
           </button>

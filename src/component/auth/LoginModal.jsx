@@ -43,15 +43,15 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           {/* Social Login Buttons */}
           <div className="mt-4 space-y-3">
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={googleIcon} alt="Google" className="w-6 mr-2" />
               Continue with Google
             </button>
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={appleIcon} alt="Apple" className="w-6" />
               Continue with Apple
             </button>
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={microsoftIcon} alt="Microsoft" className="w-6 mr-2" />
               Continue with Microsoft
             </button>
@@ -107,15 +107,15 @@ const LoginModal = ({ isOpen, onClose }) => {
           <h2 className="text-2xl font-bold text-center">Sign Up</h2>
           <p className="text-gray-600 text-center">Create a new account</p>
           <div className="mt-4 space-y-3">
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={googleIcon} alt="Google" className="w-6 mr-2" />
               Sign up with Google
             </button>
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={appleIcon} alt="Apple" className="w-6" />
               Sign up with Apple
             </button>
-            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border">
+            <button className="w-full flex items-center justify-center rounded-lg py-2 shadow-md border transition duration-300 ease-in-out transform hover:shadow-lg hover:scale-105 hover:bg-gray-100 cursor-pointer">
               <img src={microsoftIcon} alt="Microsoft" className="w-6 mr-2" />
               Sign with Microsoft
             </button>

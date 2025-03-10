@@ -64,7 +64,7 @@ const Home = () => {
   return (
     <div className="font-sans">
       <Navbar />
-
+     
       {/* Hero Section */}
       <div className="relative w-full">
         <img
@@ -82,54 +82,85 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Campaign card section */}
-      <div className="px-6 py-10 scroll-mt-40">
-        {/* Section Header */}
-        <div className="text-center mb-6">
+    {/* Campaign Cards - Desktop View */}
+    <div className="text-center mb-6">
           <h3 className="text-3xl font-bold text-gray-800">Active Campaigns</h3>
           <button className="w-60 h-10 bg-white border-2 border-indigo-500 text-indigo-500 px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:bg-indigo-500 hover:text-white">
             Browse All Campaigns
           </button>
         </div>
+<div className="hidden md:grid grid-cols-3 gap-4 px-4">
 
-        {/* Campaign Cards Grid - Changes for Mobile View */}
-        <div className="hidden md:grid grid-cols-3 gap-4 px-4">
-          {activeCampaigns.map((campaign, index) => (
-            <button
-              key={campaign.id}
-              className={`relative bg-white p-4 shadow-lg rounded-lg flex flex-col justify-between text-left transition-transform duration-300 hover:shadow-xl hover:scale-[1.02] ${
-                index === 0 ? "col-span-1 row-span-2 h-[740px]" : "h-[370px]"
-              }`}
-            >
-              <img
-                src={campaign.image}
-                alt={campaign.title}
-                className="w-full h-2/3 object-cover rounded-lg"
-              />
-              <h4 className="mt-2 text-lg font-semibold">{campaign.title}</h4>
-              <p className="text-sm text-gray-600 font-semibold">Goal: ${campaign.goal}</p>
-              <p className="text-sm text-green-600 font-semibold">Raised: ${campaign.raised}</p>
+  {activeCampaigns.map((campaign, index) => (
+    <button
+      key={campaign.id}
+      className={`relative bg-white p-4 shadow-lg rounded-lg flex flex-col justify-between text-left transition-transform duration-300 hover:shadow-xl hover:scale-[1.02] ${
+        index === 0 ? "col-span-1 row-span-2 h-[740px]" : "h-[370px]"
+      }`}
+    >
+      <img
+        src={campaign.image}
+        alt={campaign.title}
+        className="w-full h-2/3 object-cover rounded-lg"
+      />
+      <h4 className="mt-2 text-lg font-semibold">{campaign.title}</h4>
+      <p className="text-sm text-gray-600 font-semibold">Goal: ${campaign.goal}</p>
+      <p className="text-sm text-green-600 font-semibold">Raised: ${campaign.raised}</p>
 
-              {/* Animated Donate Button */}
-              <motion.div
-              className="w-full mt-2"
-              initial={{ y: 0 }}
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <button
-                className="w-20 bg-gray-900 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
-                onClick={() =>
-                {handleDonate(campaign)}
-                }
-              >
-                Donate
-              </button>
-            </motion.div>
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Animated Donate Button */}
+      <motion.div
+        className="w-full mt-2"
+        initial={{ y: 0 }}
+        whileHover={{ y: -5 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <button
+          className="w-20 bg-gray-900 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+          onClick={() => handleDonate(campaign)}
+        >
+          Donate
+        </button>
+      </motion.div>
+    </button>
+  ))}
+</div>
+
+{/* Campaign Cards - Mobile View (Horizontally Scrollable) */}
+<div className="md:hidden flex gap-4 px-4 overflow-x-auto whitespace-nowrap">
+   {/* Section Header */}
+  
+  {activeCampaigns.map((campaign) => (
+    <button
+      key={campaign.id}
+      className="relative bg-white p-4 shadow-lg rounded-lg flex flex-col justify-between text-left transition-transform duration-300 hover:shadow-xl hover:scale-[1.02] min-w-[300px]"
+    >
+      <img
+        src={campaign.image}
+        alt={campaign.title}
+        className="w-full h-48 object-cover rounded-lg"
+      />
+      <h4 className="mt-2 text-lg font-semibold">{campaign.title}</h4>
+      <p className="text-sm text-gray-600 font-semibold">Goal: ${campaign.goal}</p>
+      <p className="text-sm text-green-600 font-semibold">Raised: ${campaign.raised}</p>
+
+      {/* Animated Donate Button */}
+      <motion.div
+        className="w-full mt-2"
+        initial={{ y: 0 }}
+        whileHover={{ y: -5 }}
+        transition={{ type: "spring", stiffness: 300 }}
+      >
+        <button
+          className="w-20 bg-gray-900 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
+          onClick={() => handleDonate(campaign)}
+        >
+          Donate
+        </button>
+      </motion.div>
+    </button>
+  ))}
+</div>
+
       {/* About Section */}
       
 

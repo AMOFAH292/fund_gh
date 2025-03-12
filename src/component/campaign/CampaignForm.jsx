@@ -58,6 +58,7 @@ const CreateCampaignForm = () => {
       setPreviews([null, null, null, null]);
 
       // navigate()
+      navigate(`/campaign/${result._id}`);
     } else {
       toast.error("Failed to create campaign.");
     }

@@ -3,7 +3,7 @@ import { Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import fundLogo from "@/assets/FundLogo.png";
 import LoginModal from "@/component/auth/LoginModal";
-import HelpDropdown from "@/component/layout/HelpDropdown"; // remove if not needed
+// import HelpDropdown from "@/component/layout/HelpDropdown"; // remove if not needed
 import { useAuth } from "@/contexts/AuthContext";
 import ConfirmLogoutModal from "../auth/ConfirmLogoutModal";
 import { useNavigate } from "react-router-dom";

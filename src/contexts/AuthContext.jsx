@@ -1,13 +1,16 @@
 // AuthContext.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Store token and user in state so components can subscribe to changes.
+  // Retrieve token and user from localStorage on initialization
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   const signUp = async ({ name, email, password }) => {
     try {
@@ -35,10 +38,11 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       const { token, user } = data;
 
-      // Save token in both state and localStorage
+      // Save token and user in state and localStorage
       setToken(token);
       setUser(user);
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
       toast.success("Sign up successful!");
       return { success: true, token, user };
@@ -67,10 +71,11 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       const { token, user } = data;
 
-      // Save token in both state and localStorage
+      // Save token and user in state and localStorage
       setToken(token);
       setUser(user);
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
       toast.success("Login successful!");
       return { success: true, token, user };
@@ -80,11 +85,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout: remove token from both state and localStorage
+  // Logout: remove token and user from both state and localStorage
   const logout = () => {
     setToken(null);
     setUser(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     toast.success("Logged out");
   };
 

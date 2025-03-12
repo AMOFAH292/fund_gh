@@ -1,24 +1,44 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import fundLogo from "@/assets/FundLogo.png";
 import LoginModal from "@/component/auth/LoginModal";
-import HelpDropdown from "@/component/layout/HelpDropdown";
+import HelpDropdown from "@/component/layout/HelpDropdown"; // remove if not needed
 import { useAuth } from "@/contexts/AuthContext";
 import ConfirmLogoutModal from "../auth/ConfirmLogoutModal";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false); // remove if not needed
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogoutConfirm = () => {
     logout();
     setIsConfirmLogoutOpen(false);
     setIsProfileOpen(false);
+  };
+
+  // Function to handle "Start a Campaign" click
+  const handleStartCampaign = () => {
+    if (!token) {
+      setIsLoginOpen(true);
+    } else {
+      navigate("/create-campaign-form");
+    }
+  };
+
+  // Function to navigate to the dashboard
+  const handleDashboard = () => {
+    if (!token) {
+      setIsLoginOpen(true);
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -38,7 +58,6 @@ const Navbar = () => {
             />
             <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
           </div>
-          {/* If no token, show Login; otherwise, show the Profile icon with dropdown */}
           {!token ? (
             <Button onClick={() => setIsLoginOpen(true)} variant="outline">
               Login
@@ -56,7 +75,6 @@ const Navbar = () => {
                 <div className="absolute right-0 mt-0 w-40 bg-white border rounded shadow-lg z-50">
                   <button
                     onClick={() => {
-                      // Navigate to profile page or open profile modal
                       console.log("Go to Profile");
                     }}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
@@ -73,11 +91,21 @@ const Navbar = () => {
               )}
             </div>
           )}
+          {/* "Dashboard" Button (visible when logged in) */}
+          {token && (
+            <Button
+              onClick={handleDashboard}
+              className="bg-black hover:bg-gray-800"
+            >
+              Dashboard
+            </Button>
+          )}
+          {/* "Start a Campaign" Button */}
           <Button
-            onClick={() => setIsHelpOpen(!isHelpOpen)}
+            onClick={handleStartCampaign}
             className="bg-indigo-500 hover:bg-indigo-600"
           >
-            Help
+            START A CAMPAIGN
           </Button>
         </div>
 
@@ -109,18 +137,30 @@ const Navbar = () => {
               <User size={24} />
             </Button>
           )}
+          {/* Mobile "Dashboard" Button */}
+          {token && (
+            <Button
+              onClick={handleDashboard}
+              variant="default"
+              className="w-full bg-black"
+            >
+              Dashboard
+            </Button>
+          )}
+          {/* Mobile "Start a Campaign" Button */}
           <Button
-            onClick={() => setIsHelpOpen(!isHelpOpen)}
+            onClick={handleStartCampaign}
             variant="default"
-            className="w-full"
+            className="w-full bg-indigo-500"
           >
-            Help
+            START A CAMPAIGN
           </Button>
         </div>
       )}
 
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      <HelpDropdown isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+      {/* Remove HelpDropdown if not needed */}
+      {/* <HelpDropdown isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} /> */}
       <ConfirmLogoutModal
         isOpen={isConfirmLogoutOpen}
         onConfirm={handleLogoutConfirm}

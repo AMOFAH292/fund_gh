@@ -50,7 +50,12 @@ const Navbar = () => {
         </a>
 
         <div className="hidden md:flex space-x-6 items-center">
-          <div className="relative">
+          <div
+            onClick={() => {
+              navigate("/campaigns");
+            }}
+            className="relative"
+          >
             <input
               type="text"
               placeholder="Search..."

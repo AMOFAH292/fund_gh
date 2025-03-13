@@ -1,3 +1,4 @@
+// components/CampaignList.jsx
 import React, { useEffect, useState } from "react";
 import { useCampaign } from "@/contexts/CampaignContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,6 +9,10 @@ import DeleteModal from "./DeleteModal";
 import Skeleton from "../layout/Skeleton";
 
 const CampaignList = () => {
+  useEffect(() => {
+    scrollTo(0, 0);
+  }, []);
+
   const { campaigns, fetchCampaigns, deleteCampaign } = useCampaign();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -15,6 +20,10 @@ const CampaignList = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Filter state variables
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Number of skeleton cards to display when loading
   const skeletonCount = 6;
@@ -27,12 +36,10 @@ const CampaignList = () => {
 
   const handleDeleteConfirm = async () => {
     if (!selectedCampaignId) return;
-
     const toastId = toast.loading("Deleting campaign...");
     try {
       await deleteCampaign(selectedCampaignId);
       toast.dismiss(toastId);
-      // toast.success("Campaign deleted !");
     } catch (error) {
       toast.dismiss(toastId);
       toast.error("Failed to delete campaign.");
@@ -51,28 +58,22 @@ const CampaignList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleDelete = async (campaignId, e) => {
-    e.stopPropagation();
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this campaign?"
-    );
-    if (confirmed) {
-      const toastId = toast.loading("Deleting campaign...");
-      try {
-        await deleteCampaign(campaignId);
-        toast.dismiss(toastId);
-        // toast.success("Campaign deleted successfully!");
-      } catch (error) {
-        toast.dismiss(toastId);
-        toast.error("Failed to delete campaign.");
-      }
-    }
-  };
-
-  // Navigate to campaign details on card click.
   const handleViewDetails = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
   };
+
+  // Filter campaigns based on selected category and search term
+  const filteredCampaigns = campaigns.filter((campaign) => {
+    const categoryMatch =
+      selectedCategory === "All" || campaign.category === selectedCategory;
+    const searchMatch = campaign.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return categoryMatch && searchMatch;
+  });
+
+  // For demo purposes, a fixed list of categories is provided.
+  const categories = ["All", "Health", "Education", "Environment", "Community"];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -80,20 +81,54 @@ const CampaignList = () => {
       <h2 className="text-3xl font-bold text-gray-800 text-center mb-10">
         All Campaigns
       </h2>
+
+      {/* Filter UI */}
+      <div className="flex flex-col md:flex-row items-center justify-center mb-8 gap-4">
+        <div className="flex items-center">
+          <label htmlFor="category" className="mr-2 text-gray-700">
+            Category:
+          </label>
+          <select
+            id="category"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-3 py-2 border rounded-md"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center">
+          <label htmlFor="search" className="mr-2 text-gray-700">
+            Search:
+          </label>
+          <input
+            id="search"
+            type="text"
+            placeholder="Search by title..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-3 py-2 border rounded-md"
+          />
+        </div>
+      </div>
+
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Array.from({ length: skeletonCount }).map((_, idx) => (
             <Skeleton key={idx} />
           ))}
         </div>
-      ) : campaigns.length === 0 ? (
+      ) : filteredCampaigns.length === 0 ? (
         <p className="text-gray-600 text-center">No campaigns available.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {campaigns.map((campaign) => {
+          {filteredCampaigns.map((campaign) => {
             const isOwner =
               user && String(campaign.createdBy) === String(user.id);
-
             return (
               <motion.div
                 key={campaign._id}
@@ -123,6 +158,11 @@ const CampaignList = () => {
                     <span className="font-semibold">Raised:</span> $
                     {campaign.currentAmount}
                   </div>
+                  {campaign.category && (
+                    <div className="mt-2 text-sm text-gray-500">
+                      Category: {campaign.category}
+                    </div>
+                  )}
                 </div>
                 {isOwner && (
                   <div className="absolute inset-0 bg-black/20 flex flex-col justify-end opacity-0 hover:opacity-100 transition-opacity duration-300">

@@ -12,6 +12,7 @@ const EditCampaignForm = () => {
     title: "",
     description: "",
     goal: "",
+    category: "",
   });
   const [newImages, setNewImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
@@ -25,6 +26,7 @@ const EditCampaignForm = () => {
         title: campaign.title,
         description: campaign.description,
         goal: campaign.goal,
+        category: campaign.category || "",
       });
       setExistingImages(campaign.images || []);
     }
@@ -54,6 +56,7 @@ const EditCampaignForm = () => {
     data.append("title", formData.title);
     data.append("description", formData.description);
     data.append("goal", formData.goal);
+    data.append("category", formData.category);
 
     // Add new images
     newImages.forEach((file) => data.append("images", file));
@@ -66,6 +69,9 @@ const EditCampaignForm = () => {
       navigate("/campaigns");
     }
   };
+
+  // For demonstration, a fixed list of categories.
+  const categories = ["Health", "Education", "Environment", "Community"];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -120,6 +126,26 @@ const EditCampaignForm = () => {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
+            </div>
+
+            {/* Category Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Existing Images */}
@@ -180,7 +206,7 @@ const EditCampaignForm = () => {
                   </svg>
                   <p className="text-sm text-gray-500">
                     {newImages.length > 0
-                      ? `${newImages.length} files selected`
+                      ? `${newImages.length} file(s) selected`
                       : "Click to upload"}
                   </p>
                 </div>

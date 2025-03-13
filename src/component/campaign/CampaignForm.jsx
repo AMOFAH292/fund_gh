@@ -1,3 +1,4 @@
+// components/CreateCampaignForm.jsx
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useCampaign } from "@/contexts/CampaignContext";
@@ -7,17 +8,16 @@ import { useNavigate } from "react-router-dom";
 
 const CreateCampaignForm = () => {
   const navigate = useNavigate();
-
   const { createCampaign } = useCampaign();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [goal, setGoal] = useState("");
-  // State for 4 separate image file inputs; initially null.
+  // New state for category
+  const [category, setCategory] = useState("Health");
   const [images, setImages] = useState([null, null, null, null]);
-  // Store preview URLs for each file input
   const [previews, setPreviews] = useState([null, null, null, null]);
 
-  // Update a specific image index when a file is selected, and create a preview URL.
   const handleImageChange = (index, file) => {
     const newImages = [...images];
     newImages[index] = file;
@@ -30,39 +30,35 @@ const CreateCampaignForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("goal", goal);
-    // Append each non-null image
+    formData.append("category", category); // include category in form data
+
     images.forEach((file) => {
       if (file) formData.append("images", file);
     });
 
-    // Show loading toast
     const toastId = toast.loading("Creating campaign...");
-
     const result = await createCampaign(formData);
-
-    // Dismiss loading toast
     toast.dismiss(toastId);
 
     if (result) {
-      // toast.success("Campaign created succeswsfully!");
-      // Clear form fields and previews
       setTitle("");
       setDescription("");
       setGoal("");
+      setCategory("Health");
       setImages([null, null, null, null]);
       setPreviews([null, null, null, null]);
-
-      // navigate()
       navigate(`/campaign/${result._id}`);
     } else {
       toast.error("Failed to create campaign.");
     }
   };
+
+  // Example list of categories
+  const categories = ["Health", "Education", "Environment", "Community"];
 
   return (
     <div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-gray-50 shadow-2xl rounded-2xl">
@@ -128,6 +124,28 @@ const CreateCampaignForm = () => {
             required
           />
         </div>
+        {/* Category Field */}
+        <div>
+          <label
+            htmlFor="category"
+            className="block text-base font-medium text-gray-700 mb-2"
+          >
+            Category
+          </label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            required
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* Image Uploads */}
         <div>
           <label className="block text-base font-medium text-gray-700 mb-2">
@@ -136,7 +154,6 @@ const CreateCampaignForm = () => {
           <div className="grid grid-cols-2 gap-4">
             {[0, 1, 2, 3].map((index) => (
               <div key={index} className="flex flex-col items-center">
-                {/* Hidden file input */}
                 <input
                   id={`file-input-${index}`}
                   type="file"
@@ -146,7 +163,6 @@ const CreateCampaignForm = () => {
                   }
                   className="hidden"
                 />
-                {/* Label to trigger file input */}
                 <label
                   htmlFor={`file-input-${index}`}
                   className="cursor-pointer flex flex-col items-center justify-center w-24 h-24 border-2 border-dashed border-gray-300 rounded-md hover:border-indigo-400 transition-colors"

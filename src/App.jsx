@@ -7,12 +7,15 @@ import CampaignList from "./component/campaign/CampaignList";
 import EditCampaignForm from "./component/campaign/EditCampaignForm";
 import StartCampaignPage from "./pages/StartCampaignPage";
 import CampaignDetailPage from "./pages/CampaignDetailPage";
+import Navbar from "./component/layout/Navbar";
 
 function App() {
   return (
     <div>
       <Toaster />
+
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/donate" element={<DonationPage />} />

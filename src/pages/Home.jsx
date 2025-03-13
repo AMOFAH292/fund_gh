@@ -9,8 +9,6 @@ import ActiveCampaigns from "@/component/landing/ActiveCampaigns";
 const Home = () => {
   return (
     <div className="font-sans">
-      <Navbar />
-
       {/* Hero Section */}
       <div className="">
         <div className="relative w-full">

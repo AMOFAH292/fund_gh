@@ -15,6 +15,11 @@ const ActiveCampaigns = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Sorting campaigns by the amount raised in descending order and selecting top 5
+  const topCampaigns = [...campaigns]
+    .sort((a, b) => b.currentAmount - a.currentAmount)
+    .slice(0, 5);
+
   // Navigate to the campaign detail page when clicking on the card
   const handleViewDetails = (campaign) => {
     navigate(`/campaign/${campaign._id}`);
@@ -43,8 +48,8 @@ const ActiveCampaigns = () => {
       </h3>
       {/* Desktop Grid */}
       <div className="hidden md:grid grid-cols-3 gap-4">
-        {campaigns.length > 0
-          ? campaigns.map((campaign, index) => (
+        {topCampaigns.length > 0
+          ? topCampaigns.map((campaign, index) => (
               <button
                 key={campaign._id}
                 className={`relative bg-white p-4 shadow-lg rounded-lg flex flex-col justify-between text-left transition-transform duration-300 hover:shadow-xl hover:scale-105 ${
@@ -130,10 +135,10 @@ const ActiveCampaigns = () => {
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <button
-                      onClick={(e) => handleDonate(campaign, e)}
+                      onClick={() => handleDonate(campaign)}
                       className="w-full bg-gray-900 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
                     >
-                      Donate
+                      Read
                     </button>
                   </motion.div>
                 </button>

@@ -1,14 +1,18 @@
-// DonationPage.jsx
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Footer from "../layout/Footer";
 import Navbar from "../layout/Navbar";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import PreviousButton from "../layout/PreviousButton";
 
 const DonationPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [donationAmount, setDonationAmount] = useState("");
+  const [cardHolder, setCardHolder] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Read campaign details from query params.
@@ -27,6 +31,7 @@ const DonationPage = () => {
       toast.error("Please enter a valid donation amount");
       return;
     }
+    // (Optionally, you can validate the credit card fields here.)
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -42,13 +47,14 @@ const DonationPage = () => {
         }
       );
       const data = await response.json();
+      // ...
       if (response.ok) {
         toast.success("Donation successful!");
-        // Optionally, navigate back to the campaign details page or refresh details.
-        navigate(`/campaign/${campaign.id}`);
+        navigate(`/thank-you`);
       } else {
         toast.error(data.error || "Donation failed");
       }
+      // ...
     } catch (error) {
       toast.error("An error occurred. Please try again.");
     } finally {
@@ -63,7 +69,7 @@ const DonationPage = () => {
   return (
     <div>
       <Navbar />
-      <Toaster position="top-right" />
+      <PreviousButton />
       <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
         <div className="bg-white shadow-xl rounded-2xl m-4 w-full max-w-4xl p-6 md:p-10 flex flex-col md:flex-row gap-6">
           {/* Campaign Details Section */}
@@ -87,15 +93,79 @@ const DonationPage = () => {
             <h1 className="text-2xl font-bold text-center mb-4">
               Make a Donation
             </h1>
-            <form onSubmit={handleDonationSubmit} className="space-y-4">
-              <input
-                type="number"
-                placeholder="Donation Amount (GHS)"
-                value={donationAmount}
-                onChange={(e) => setDonationAmount(e.target.value)}
-                className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                required
-              />
+            <form onSubmit={handleDonationSubmit} className="space-y-6">
+              {/* Donation Amount */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Donation Amount (GHS)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter donation amount"
+                  value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                  className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  required
+                />
+              </div>
+              {/* Credit Card Details */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cardholder Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  value={cardHolder}
+                  onChange={(e) => setCardHolder(e.target.value)}
+                  className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Card Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="1234 5678 9012 3456"
+                  value={cardNumber}
+                  onChange={(e) => setCardNumber(e.target.value)}
+                  className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  maxLength="19"
+                  required
+                />
+              </div>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Expiry Date
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    value={expiry}
+                    onChange={(e) => setExpiry(e.target.value)}
+                    className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    maxLength="5"
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    CVV
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="123"
+                    value={cvv}
+                    onChange={(e) => setCvv(e.target.value)}
+                    className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    maxLength="4"
+                    required
+                  />
+                </div>
+              </div>
               <button
                 type="submit"
                 disabled={loading}

@@ -1,8 +1,7 @@
-// components/CampaignList.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCampaign } from "@/contexts/CampaignContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast, Toaster } from "react-hot-toast";
 import DeleteModal from "./DeleteModal";
@@ -16,6 +15,8 @@ const CampaignList = () => {
   const { campaigns, fetchCampaigns, deleteCampaign } = useCampaign();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchInputRef = useRef(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
@@ -58,6 +59,13 @@ const CampaignList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // When the component mounts, check for the search query parameter and focus the search input if found.
+  useEffect(() => {
+    if (searchParams.get("search") === "true" && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchParams]);
+
   const handleViewDetails = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
   };
@@ -72,7 +80,7 @@ const CampaignList = () => {
     return categoryMatch && searchMatch;
   });
 
-  // For demo purposes, a fixed list of categories is provided.
+  // Fixed list of categories for demonstration
   const categories = ["All", "Health", "Education", "Environment", "Community"];
 
   return (
@@ -82,17 +90,20 @@ const CampaignList = () => {
         All Campaigns
       </h2>
 
-      {/* Filter UI */}
-      <div className="flex flex-col md:flex-row items-center justify-center mb-8 gap-4">
-        <div className="flex items-center">
-          <label htmlFor="category" className="mr-2 text-gray-700">
-            Category:
+      {/* Modern Filter UI */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-10">
+        <div className="flex flex-col">
+          <label
+            htmlFor="category"
+            className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+          >
+            Category
           </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="w-60 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
@@ -101,17 +112,21 @@ const CampaignList = () => {
             ))}
           </select>
         </div>
-        <div className="flex items-center">
-          <label htmlFor="search" className="mr-2 text-gray-700">
-            Search:
+        <div className="flex flex-col">
+          <label
+            htmlFor="search"
+            className="mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+          >
+            Search
           </label>
           <input
             id="search"
             type="text"
             placeholder="Search by title..."
+            ref={searchInputRef}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-3 py-2 border rounded-md"
+            className="w-80 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
           />
         </div>
       </div>

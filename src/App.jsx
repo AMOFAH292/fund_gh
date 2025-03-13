@@ -1,4 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// App.jsx
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import DonationPage from "./component/donation/DonationPage";
 import toast, { Toaster } from "react-hot-toast";
@@ -8,31 +14,43 @@ import EditCampaignForm from "./component/campaign/EditCampaignForm";
 import StartCampaignPage from "./pages/StartCampaignPage";
 import CampaignDetailPage from "./pages/CampaignDetailPage";
 import Navbar from "./component/layout/Navbar";
+import PreviousButton from "./component/layout/PreviousButton";
+import ThankYouPage from "./component/donation/ThankYouPage";
+
+const AppContent = () => {
+  const location = useLocation();
+  const hidePrevButton = location.pathname === "/";
+
+  return (
+    <>
+      <Navbar />
+      {!hidePrevButton && <PreviousButton />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/donate" element={<DonationPage />} />
+        <Route path="/create-campaign-form" element={<StartCampaignPage />} />
+        <Route path="/create-campaign" element={<CreateCampaignForm />} />
+        <Route path="/campaigns" element={<CampaignList />} />
+        <Route path="/campaign/:campaignId" element={<CampaignDetailPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route
+          path="/edit-campaign/:campaignId"
+          element={<EditCampaignForm />}
+        />
+      </Routes>
+    </>
+  );
+};
 
 function App() {
   return (
     <div>
       <Toaster />
-
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/donate" element={<DonationPage />} />
-          <Route path="/create-campaign-form" element={<StartCampaignPage />} />
-          <Route path="/create-campaign" element={<CreateCampaignForm />} />
-          <Route exact path="/campaigns" element={<CampaignList />} />
-          <Route
-            path="/campaign/:campaignId"
-            element={<CampaignDetailPage />}
-          />
-          <Route
-            path="/edit-campaign/:campaignId"
-            element={<EditCampaignForm />}
-          />
-        </Routes>
+        <AppContent />
       </Router>
     </div>
   );
 }
+
 export default App;

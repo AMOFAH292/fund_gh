@@ -60,7 +60,6 @@ const CampaignDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Toaster position="top-right" />
       {/* Modern Hero Section */}
       {campaign.images && campaign.images.length > 0 && (
         <div className="relative h-80 md:h-[500px] w-full">
@@ -102,7 +101,17 @@ const CampaignDetailPage = () => {
                 </p>
               </div>
               <motion.button
-                onClick={() => navigate(`/donate?campaignId=${campaign._id}`)}
+                onClick={() =>
+                  navigate(
+                    `/donate?campaignId=${
+                      campaign._id
+                    }&title=${encodeURIComponent(campaign.title)}&goal=${
+                      campaign.goal
+                    }&raised=${
+                      campaign.currentAmount
+                    }&image=${encodeURIComponent(campaign.images[0] || "")}`
+                  )
+                }
                 className="px-8 py-3 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 transition shadow-md"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

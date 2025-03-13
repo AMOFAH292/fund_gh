@@ -3,7 +3,6 @@ import { Menu, X, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import fundLogo from "@/assets/FundLogo.png";
 import LoginModal from "@/component/auth/LoginModal";
-// import HelpDropdown from "@/component/layout/HelpDropdown"; // remove if not needed
 import { useAuth } from "@/contexts/AuthContext";
 import ConfirmLogoutModal from "../auth/ConfirmLogoutModal";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ const Navbar = () => {
   const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isHelpOpen, setIsHelpOpen] = useState(false); // remove if not needed
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
   const navigate = useNavigate();
@@ -23,7 +21,6 @@ const Navbar = () => {
     setIsProfileOpen(false);
   };
 
-  // Function to handle "Start a Campaign" click
   const handleStartCampaign = () => {
     if (!token) {
       setIsLoginOpen(true);
@@ -32,13 +29,17 @@ const Navbar = () => {
     }
   };
 
-  // Function to navigate to the dashboard
   const handleDashboard = () => {
     if (!token) {
       setIsLoginOpen(true);
     } else {
       navigate("/dashboard");
     }
+  };
+
+  // When the search icon is clicked, navigate to /campaigns with ?search=true
+  const handleSearchClick = () => {
+    navigate("/campaigns?search=true");
   };
 
   return (
@@ -50,19 +51,10 @@ const Navbar = () => {
         </a>
 
         <div className="hidden md:flex space-x-6 items-center">
-          <div
-            onClick={() => {
-              navigate("/campaigns");
-            }}
-            className="relative"
-          >
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border rounded-lg px-4 py-2 pl-10 focus:outline-none"
-            />
-            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
-          </div>
+          {/* Instead of an always-visible search input, render a search button */}
+          <Button onClick={handleSearchClick} variant="ghost" className="p-2">
+            <Search size={20} />
+          </Button>
           {!token ? (
             <Button onClick={() => setIsLoginOpen(true)} variant="outline">
               Login
@@ -96,7 +88,6 @@ const Navbar = () => {
               )}
             </div>
           )}
-          {/* "Dashboard" Button (visible when logged in) */}
           {token && (
             <Button
               onClick={handleDashboard}
@@ -105,7 +96,6 @@ const Navbar = () => {
               Dashboard
             </Button>
           )}
-          {/* "Start a Campaign" Button */}
           <Button
             onClick={handleStartCampaign}
             className="bg-indigo-500 hover:bg-indigo-600"
@@ -142,7 +132,6 @@ const Navbar = () => {
               <User size={24} />
             </Button>
           )}
-          {/* Mobile "Dashboard" Button */}
           {token && (
             <Button
               onClick={handleDashboard}
@@ -152,7 +141,6 @@ const Navbar = () => {
               Dashboard
             </Button>
           )}
-          {/* Mobile "Start a Campaign" Button */}
           <Button
             onClick={handleStartCampaign}
             variant="default"
@@ -164,8 +152,6 @@ const Navbar = () => {
       )}
 
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      {/* Remove HelpDropdown if not needed */}
-      {/* <HelpDropdown isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} /> */}
       <ConfirmLogoutModal
         isOpen={isConfirmLogoutOpen}
         onConfirm={handleLogoutConfirm}

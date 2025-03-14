@@ -148,7 +148,7 @@ const CampaignList = () => {
               <motion.div
                 key={campaign._id}
                 onClick={() => handleViewDetails(campaign._id)}
-                className="relative bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition hover:scale-105"
+                className="group relative bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer transform transition hover:scale-105"
                 whileHover={{ scale: 1.03 }}
               >
                 {campaign.images && campaign.images.length > 0 && (
@@ -179,8 +179,21 @@ const CampaignList = () => {
                     </div>
                   )}
                 </div>
+                {/* Read Button overlay */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleViewDetails(campaign._id);
+                    }}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+                  >
+                    Read
+                  </button>
+                </div>
+                {/* Owner options overlay (Edit/Delete) */}
                 {isOwner && (
-                  <div className="absolute inset-0 bg-black/20 flex flex-col justify-end opacity-0 hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 bg-black/20 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="flex justify-end items-center space-x-4 p-4">
                       <button
                         onClick={(e) => {

@@ -157,7 +157,7 @@ const Dashboard = () => {
                 return (
                   <motion.div
                     key={campaign._id}
-                    className="bg-white rounded-xl p-6 shadow-lg transform transition hover:scale-105 hover:shadow-2xl"
+                    className="bg-white rounded-xl p-6 shadow-lg transform transition hover:scale-105 hover:shadow-2xl cursor-pointer"
                     whileHover={{ scale: 1.03 }}
                   >
                     <h3 className="text-xl font-semibold text-indigo-600 mb-2">

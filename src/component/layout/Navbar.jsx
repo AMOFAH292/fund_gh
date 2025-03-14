@@ -56,11 +56,19 @@ const Navbar = () => {
         </a>
 
         <div className="hidden md:flex space-x-6 items-center">
-          <Button onClick={handleSearchClick} variant="ghost" className="p-2">
+          <Button
+            onClick={handleSearchClick}
+            variant="ghost"
+            className="p-2 cursor-pointer"
+          >
             <Search size={20} />
           </Button>
           {!token ? (
-            <Button onClick={() => setIsLoginOpen(true)} variant="outline">
+            <Button
+              onClick={() => setIsLoginOpen(true)}
+              variant="outline"
+              className={"cursor-pointer"}
+            >
               Login
             </Button>
           ) : (
@@ -69,7 +77,7 @@ const Navbar = () => {
               onMouseEnter={() => setIsProfileOptionsOpen(true)}
               onMouseLeave={() => setIsProfileOptionsOpen(false)}
             >
-              <Button variant="outline">
+              <Button variant="outline" className={"cursor-pointer"}>
                 <User size={24} />
               </Button>
               {isProfileOptionsOpen && (
@@ -78,13 +86,13 @@ const Navbar = () => {
                     onClick={() => {
                       navigate("/user-profile");
                     }}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >
                     Profile
                   </button>
                   <button
                     onClick={() => setIsConfirmLogoutOpen(true)}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   >
                     Logout
                   </button>
@@ -95,14 +103,14 @@ const Navbar = () => {
           {token && (
             <Button
               onClick={handleDashboard}
-              className="bg-black hover:bg-gray-800"
+              className="bg-black hover:bg-gray-800 cursor-pointer"
             >
               Dashboard
             </Button>
           )}
           <Button
             onClick={handleStartCampaign}
-            className="bg-indigo-500 hover:bg-indigo-600"
+            className="bg-indigo-500 hover:bg-indigo-600 cursor-pointer"
           >
             START A CAMPAIGN
           </Button>

@@ -16,14 +16,18 @@ import CampaignDetailPage from "./pages/CampaignDetailPage";
 import Navbar from "./component/layout/Navbar";
 import PreviousButton from "./component/layout/PreviousButton";
 import ThankYouPage from "./component/donation/ThankYouPage";
+import NotFoundPage from "./component/layout/404Page";
+import Dashboard from "./pages/Dashboard";
 
 const AppContent = () => {
   const location = useLocation();
-  const hidePrevButton = location.pathname === "/";
+  const hidePrevButton =
+    location.pathname === "/" || location.pathname === "/dashboard";
+  const hideNavBar = location.pathname === "/dashboard";
 
   return (
     <>
-      <Navbar />
+      {!hideNavBar && <Navbar />}
       {!hidePrevButton && <PreviousButton />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -37,6 +41,9 @@ const AppContent = () => {
           path="/edit-campaign/:campaignId"
           element={<EditCampaignForm />}
         />
+        <Route path="/dashboard" element={<Dashboard />} />
+        //404 page
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

@@ -9,7 +9,7 @@ const ThankYouPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate("/campaigns");
-    }, 8000);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [navigate]);
 

@@ -13,6 +13,7 @@ const DonationPage = () => {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvv, setCvv] = useState("");
+  const [donationMessage, setDonationMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Read campaign details from query params.
@@ -31,7 +32,7 @@ const DonationPage = () => {
       toast.error("Please enter a valid donation amount");
       return;
     }
-    // (Optionally, you can validate the credit card fields here.)
+    // Optionally validate credit card fields here...
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -43,18 +44,19 @@ const DonationPage = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ amount: donationAmount }),
+          body: JSON.stringify({
+            amount: donationAmount,
+            message: donationMessage,
+          }),
         }
       );
       const data = await response.json();
-      // ...
       if (response.ok) {
         toast.success("Donation successful!");
         navigate(`/thank-you`);
       } else {
         toast.error(data.error || "Donation failed");
       }
-      // ...
     } catch (error) {
       toast.error("An error occurred. Please try again.");
     } finally {
@@ -107,6 +109,19 @@ const DonationPage = () => {
                   className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
                 />
+              </div>
+              {/* Donation Message */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Donation Message (Optional)
+                </label>
+                <textarea
+                  placeholder="Enter a message to the campaign..."
+                  value={donationMessage}
+                  onChange={(e) => setDonationMessage(e.target.value)}
+                  className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  rows="3"
+                ></textarea>
               </div>
               {/* Credit Card Details */}
               <div>

@@ -18,11 +18,14 @@ import PreviousButton from "./component/layout/PreviousButton";
 import ThankYouPage from "./component/donation/ThankYouPage";
 import NotFoundPage from "./component/layout/404Page";
 import Dashboard from "./pages/Dashboard";
+import ProfilePage from "./component/auth/ProfilePage";
 
 const AppContent = () => {
   const location = useLocation();
   const hidePrevButton =
-    location.pathname === "/" || location.pathname === "/dashboard";
+    location.pathname === "/" ||
+    location.pathname === "/dashboard" ||
+    location.pathname === "/user-profile";
   const hideNavBar = location.pathname === "/dashboard";
 
   return (
@@ -31,6 +34,7 @@ const AppContent = () => {
       {!hidePrevButton && <PreviousButton />}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/user-profile" element={<ProfilePage />} />
         <Route path="/donate" element={<DonationPage />} />
         <Route path="/create-campaign-form" element={<StartCampaignPage />} />
         <Route path="/create-campaign" element={<CreateCampaignForm />} />

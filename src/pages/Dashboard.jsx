@@ -1,36 +1,66 @@
-// Dashboard.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useCampaign } from "../contexts/CampaignContext";
 import { useAuth } from "../contexts/AuthContext";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { Menu, X } from "lucide-react";
 
-// Modern Sidebar with gradient background and subtle glass effect
-const Sidebar = () => (
-  <div className="w-64 min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 text-white shadow-xl backdrop-blur-md">
-    <div className="p-6 text-2xl font-semibold border-b border-gray-700">
-      Dashboard
-    </div>
-    <ul className="mt-4">
-      {["Home", "My Campaigns", "My Donations", "Profile", "Settings"].map(
-        (item, idx) => (
+// Collapsible Sidebar component
+const Sidebar = ({ isOpen, toggleSidebar, scrollToSection }) => {
+  const sidebarItems = [
+    { name: "Home", section: "home" },
+    { name: "My Campaigns", section: "campaigns" },
+    { name: "My Donations", section: "donations" },
+    { name: "Profile", section: "profile" },
+    { name: "Settings", section: "settings" },
+  ];
+
+  return (
+    <div
+      className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
+        isOpen ? "w-64" : "w-16"
+      } bg-gradient-to-b from-indigo-600 to-black text-white shadow-xl backdrop-blur-md`}
+    >
+      <div className="flex items-center justify-between p-4 border-b border-indigo-700">
+        {isOpen && <span className="text-2xl font-semibold">Dashboard</span>}
+        <button onClick={toggleSidebar} className="p-2 focus:outline-none">
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+      <ul className="mt-4">
+        {sidebarItems.map((item, idx) => (
           <li
             key={idx}
-            className="p-4 hover:bg-gray-700 cursor-pointer transition-colors"
+            onClick={() => {
+              scrollToSection(item.section);
+              // Optionally collapse sidebar on mobile after selection
+              if (window.innerWidth < 768) toggleSidebar();
+            }}
+            className="flex items-center p-4 hover:bg-indigo-700 cursor-pointer transition-colors"
           >
-            {item}
+            <span className="flex-1">
+              {isOpen ? item.name : item.name.charAt(0)}
+            </span>
           </li>
-        )
-      )}
-    </ul>
-  </div>
-);
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const Dashboard = () => {
   const { campaigns, fetchCampaigns } = useCampaign();
   const { user } = useAuth();
-
   const [donations, setDonations] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // Refs for sections
+  const homeRef = useRef(null);
+  const campaignsRef = useRef(null);
+  const donationsRef = useRef(null);
+
+  // Toggle sidebar visibility
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   // Fetch campaigns on mount
   useEffect(() => {
@@ -76,17 +106,45 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  // Scroll handler for sidebar navigation
+  const scrollToSection = (section) => {
+    if (section === "home" && homeRef.current) {
+      homeRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    if (section === "campaigns" && campaignsRef.current) {
+      campaignsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    if (section === "donations" && donationsRef.current) {
+      donationsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          Welcome, {user ? user.firstName : "User"}!
-        </h1>
+    <div className="flex min-h-screen bg-white">
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        scrollToSection={scrollToSection}
+      />
+
+      {/* Main content */}
+      <div className="flex-1 ml-16 md:ml-64 p-8 transition-all duration-300">
+        <div ref={homeRef} className=" flex gap-1 lg:gap-5">
+          {/* user image */}
+          <img
+            className="size-10 rounded-full object-cover mb-4"
+            src={user ? user.profilePicture : "https://via.placeholder.com/150"}
+            alt="User Avatar"
+          />
+          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
+            Welcome, {user ? user.firstName : "User"}!
+          </h1>
+        </div>
 
         {/* My Campaigns Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+        <section ref={campaignsRef} className="mb-12">
+          <h2 className="text-2xl font-semibold text-indigo-600 mb-6">
             My Campaigns
           </h2>
           {myCampaigns.length ? (
@@ -99,17 +157,17 @@ const Dashboard = () => {
                 return (
                   <motion.div
                     key={campaign._id}
-                    className="bg-white/80 backdrop-blur-md rounded-xl p-6 shadow-lg transform transition hover:scale-105 hover:shadow-2xl"
+                    className="bg-white rounded-xl p-6 shadow-lg transform transition hover:scale-105 hover:shadow-2xl"
                     whileHover={{ scale: 1.03 }}
                   >
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    <h3 className="text-xl font-semibold text-indigo-600 mb-2">
                       {campaign.title}
                     </h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                       {campaign.description}
                     </p>
                     <div className="mb-3 text-sm text-gray-800">
-                      <span className="font-bold text-green-600">
+                      <span className="font-bold text-indigo-600">
                         ${campaign.currentAmount.toLocaleString()}
                       </span>{" "}
                       raised of ${campaign.goal.toLocaleString()}
@@ -117,7 +175,7 @@ const Dashboard = () => {
                     {/* Progress Bar */}
                     <div className="w-full bg-gray-300 rounded-full h-3 mb-2">
                       <div
-                        className="bg-green-500 h-3 rounded-full transition-all duration-500"
+                        className="bg-indigo-600 h-3 rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>
@@ -136,8 +194,8 @@ const Dashboard = () => {
         </section>
 
         {/* My Donations Section */}
-        <section>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+        <section ref={donationsRef}>
+          <h2 className="text-2xl font-semibold text-indigo-600 mb-6">
             My Donations
           </h2>
           {donations.length ? (
@@ -145,9 +203,9 @@ const Dashboard = () => {
               {donations.map((donation) => (
                 <motion.div
                   key={donation._id}
-                  className="bg-white/80 backdrop-blur-md rounded-xl p-6 shadow-lg"
+                  className="bg-white rounded-xl p-6 shadow-lg"
                 >
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  <h3 className="text-xl font-semibold text-indigo-600 mb-2">
                     {donation.campaign.title}
                   </h3>
                   <p className="text-gray-600 mb-2">

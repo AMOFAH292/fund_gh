@@ -9,16 +9,16 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { token, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Mobile menu open
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProfileOptionsOpen, setIsProfileOptionsOpen] = useState(false);
   const [isConfirmLogoutOpen, setIsConfirmLogoutOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogoutConfirm = () => {
     logout();
     setIsConfirmLogoutOpen(false);
-    setIsProfileOpen(false);
+    setIsProfileOptionsOpen(false);
   };
 
   const handleStartCampaign = () => {
@@ -33,11 +33,16 @@ const Navbar = () => {
     if (!token) {
       setIsLoginOpen(true);
     } else {
-      navigate("/dashboard");
+      window.open("/dashboard", "_blank");
     }
   };
 
-  // When the search icon is clicked, navigate to /campaigns with ?search=true
+  // Toggle mobile account options
+  const toggleProfileOptions = () => {
+    setIsProfileOptionsOpen((prev) => !prev);
+  };
+
+  // Navigate to search page
   const handleSearchClick = () => {
     navigate("/campaigns?search=true");
   };
@@ -51,7 +56,6 @@ const Navbar = () => {
         </a>
 
         <div className="hidden md:flex space-x-6 items-center">
-          {/* Instead of an always-visible search input, render a search button */}
           <Button onClick={handleSearchClick} variant="ghost" className="p-2">
             <Search size={20} />
           </Button>
@@ -62,17 +66,17 @@ const Navbar = () => {
           ) : (
             <div
               className="relative"
-              onMouseEnter={() => setIsProfileOpen(true)}
-              onMouseLeave={() => setIsProfileOpen(false)}
+              onMouseEnter={() => setIsProfileOptionsOpen(true)}
+              onMouseLeave={() => setIsProfileOptionsOpen(false)}
             >
               <Button variant="outline">
                 <User size={24} />
               </Button>
-              {isProfileOpen && (
+              {isProfileOptionsOpen && (
                 <div className="absolute right-0 mt-0 w-40 bg-white border rounded shadow-lg z-50">
                   <button
                     onClick={() => {
-                      console.log("Go to Profile");
+                      navigate("/user-profile");
                     }}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
@@ -104,6 +108,7 @@ const Navbar = () => {
           </Button>
         </div>
 
+        {/* Mobile Navigation */}
         <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
@@ -125,12 +130,41 @@ const Navbar = () => {
               Login
             </Button>
           ) : (
-            <Button
-              variant="outline"
-              className="w-full flex items-center justify-center"
-            >
-              <User size={24} />
-            </Button>
+            <>
+              <Button
+                onClick={toggleProfileOptions}
+                variant="outline"
+                className="w-full flex items-center justify-between"
+              >
+                <span className="flex items-center">
+                  <User size={24} />
+                  <span className="ml-2">Account</span>
+                </span>
+                {isProfileOptionsOpen ? <X size={20} /> : <Menu size={20} />}
+              </Button>
+              {isProfileOptionsOpen && (
+                <div className="w-full bg-white border rounded-lg shadow-md p-2">
+                  <button
+                    onClick={() => {
+                      navigate("/user-profile");
+                      setIsProfileOptionsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsConfirmLogoutOpen(true);
+                      setIsProfileOptionsOpen(false);
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </>
           )}
           {token && (
             <Button

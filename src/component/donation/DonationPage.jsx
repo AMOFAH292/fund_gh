@@ -26,12 +26,29 @@ const DonationPage = () => {
     image: searchParams.get("image") || "/default-image.jpg",
   };
 
+  // Calculate remaining amount allowed for donation
+  const remainingAmount = Math.max(
+    Number(campaign.goal) - Number(campaign.raised),
+    0
+  );
+
   const handleDonationSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate donation amount is positive
     if (!donationAmount || Number(donationAmount) <= 0) {
       toast.error("Please enter a valid donation amount");
       return;
     }
+
+    // Ensure donation doesn't exceed the remaining amount to meet the goal
+    if (Number(donationAmount) > remainingAmount) {
+      toast.error(
+        `Donation exceeds the remaining goal of GH₵ ${remainingAmount.toLocaleString()}`
+      );
+      return;
+    }
+
     // Optionally validate credit card fields here...
     setLoading(true);
     try {
@@ -89,6 +106,9 @@ const DonationPage = () => {
             <p className="font-bold">
               Goal: GH₵ {Number(campaign.goal).toLocaleString()}
             </p>
+            <p className="text-gray-700">
+              Remaining: GH₵ {remainingAmount.toLocaleString()}
+            </p>
           </div>
           {/* Donation Form Section */}
           <div className="flex-1 p-6 bg-white rounded-lg shadow-md">
@@ -108,6 +128,8 @@ const DonationPage = () => {
                   onChange={(e) => setDonationAmount(e.target.value)}
                   className="border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                   required
+                  // Optionally set the maximum to the remaining amount
+                  // max={remainingAmount}
                 />
               </div>
               {/* Donation Message */}

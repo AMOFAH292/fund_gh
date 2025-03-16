@@ -19,6 +19,8 @@ import ThankYouPage from "./component/donation/ThankYouPage";
 import NotFoundPage from "./component/layout/404Page";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./component/auth/ProfilePage";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const AppContent = () => {
   const location = useLocation();

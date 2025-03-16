@@ -13,7 +13,7 @@ const AdvancedAboutSection = () => {
       {/* Full-screen background video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
-        src='{assets.barca}'
+        src={assets.barca}
         autoPlay
         loop
         muted

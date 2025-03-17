@@ -25,7 +25,7 @@ const AdvancedAboutSection = () => {
       {/* Content container */}
       <div className="relative z-10 max-w-4xl px-8 py-12 text-center">
         <motion.h2
-          className="text-6xl md:text-8xl font-extrabold text-white tracking-tight"
+          className="text-6xl md:text-8xl font-medium text-white tracking-tight"
           initial={{ y: -50 }}
           animate={{ y: 0 }}
           transition={{ duration: 1 }}

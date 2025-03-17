@@ -7,22 +7,22 @@ import { assets } from "@/assets/assets";
 const successfulCampaigns = [
   {
     id: 1,
-    title: "Clean Water for All",
-    image: assets.Campaign1, // Replace with appropriate asset
+    title: <p>Clean Water for All</p>,
+    image: 'https://plus.unsplash.com/premium_photo-1678837556048-8809e355241b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2xlYW4lMjB3YXRlciUyMGFmcmljYXxlbnwwfHwwfHx8MA%3D%3D', // Replace with appropriate asset
     raised: "12,000",
     goal: "15,000",
   },
   {
     id: 2,
-    title: "Education Fund",
-    image: assets.Campaign2, // Replace with appropriate asset
+    title: <p>Education Fund</p>,
+    image:'https://images.unsplash.com/photo-1534597422092-8a84f1b45a9c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGVkdWNhdGlvbiUyMGFmcmljYXxlbnwwfHwwfHx8MA%3D%3D', 
     raised: "25,000",
     goal: "30,000",
   },
   {
     id: 3,
-    title: "Medical Aid",
-    image: assets.Campaign3, // Replace with appropriate asset
+    title: <p>Medical Aid</p>,
+    image: 'https://plus.unsplash.com/premium_photo-1682129988477-90608474ff6a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWVkaWNhbCUyMGFpZCUyMGFmcmljYXxlbnwwfHwwfHx8MA%3D%3D', 
     raised: "18,000",
     goal: "20,000",
   },

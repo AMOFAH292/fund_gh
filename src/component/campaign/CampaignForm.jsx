@@ -1,4 +1,3 @@
-// components/CreateCampaignForm.jsx
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useCampaign } from "@/contexts/CampaignContext";
@@ -13,7 +12,6 @@ const CreateCampaignForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [goal, setGoal] = useState("");
-  // New state for category
   const [category, setCategory] = useState("Health");
   const [images, setImages] = useState([null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null]);
@@ -34,7 +32,7 @@ const CreateCampaignForm = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("goal", goal);
-    formData.append("category", category); // include category in form data
+    formData.append("category", category);
 
     images.forEach((file) => {
       if (file) formData.append("images", file);
@@ -180,6 +178,12 @@ const CreateCampaignForm = () => {
               </div>
             ))}
           </div>
+        </div>
+        {/* Informational Disclaimer */}
+        <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm text-indigo-700">
+          After creating your campaign, our team will contact you for verification. Your campaign
+          will remain active during this process. Please note that if your campaign fails the
+          verification process, it will be removed and any donated funds will be refunded.
         </div>
         {/* Submit Button */}
         <motion.button

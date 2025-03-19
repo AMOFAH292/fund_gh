@@ -11,13 +11,13 @@ const AdvancedAboutSection = () => {
       transition={{ duration: 1.2 }}
     >
       {/* Full-screen background video */}
-      <video
+      {/* <video
         className="absolute top-0 left-0 w-full h-full object-cover"
         src={assets.barca}
         autoPlay
         loop
         muted
-      />
+      /> */}
 
       {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-black opacity-60" />

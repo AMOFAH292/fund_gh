@@ -1,3 +1,6 @@
+import { assets } from "@/assets/assets";
+import fundLogo from "@/assets/FundLogo.png";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-8">
@@ -37,20 +40,21 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="text-indigo-500 text-xl font-bold">▲</span>
-            <span className="font-semibold text-lg">DonateNow</span>
-          </div>
+           <a href="/" className="text-2xl font-bold flex items-center">
+                    <img src={fundLogo} alt="Logo" className="w-10 h-10 mr-2" />
+                    GhanaFund
+                  </a>
+          
 
           {/* Language Selector */}
-          <select className="bg-gray-800 border border-gray-600 px-2 py-1 rounded text-white">
+          {/* <select className="bg-gray-800 border border-gray-600 px-2 py-1 rounded text-white">
             <option>English</option>
             <option>French</option>
-          </select>
+          </select> */}
 
           {/* Copyright and Links */}
           <p>
-            © 2024 Brand, Inc. •{" "}
+            © 2025 GhanaFund, Inc. •{" "}
             <a href="#" className="hover:underline">
               Privacy
             </a>{" "}
@@ -59,9 +63,9 @@ const Footer = () => {
               Terms
             </a>{" "}
             •{" "}
-            <a href="#" className="hover:underline">
+            {/* <a href="#" className="hover:underline">
               Sitemap
-            </a>
+            </a> */}
           </p>
 
           {/* Social Media Icons */}

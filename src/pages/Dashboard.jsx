@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Collapsible Sidebar component
 const Sidebar = ({ isOpen, toggleSidebar, scrollToSection }) => {
@@ -49,10 +50,11 @@ const Sidebar = ({ isOpen, toggleSidebar, scrollToSection }) => {
 };
 
 const Dashboard = () => {
-  const { campaigns, fetchCampaigns } = useCampaign();
+  const { campaigns, fetchCampaigns ,currency} = useCampaign();
   const { user } = useAuth();
   const [donations, setDonations] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   // Refs for sections
   const homeRef = useRef(null);
@@ -119,6 +121,11 @@ const Dashboard = () => {
     }
   };
 
+  // Navigate to campaign details page
+  const handleCampaignClick = (campaignId) => {
+    navigate(`/campaign/${campaignId}`);
+  };
+
   return (
     <div className="flex min-h-screen bg-white">
       {/* Sidebar */}
@@ -130,20 +137,39 @@ const Dashboard = () => {
 
       {/* Main content */}
       <div className="flex-1 ml-16 md:ml-64 p-8 transition-all duration-300">
-        <div ref={homeRef} className=" flex gap-1 lg:gap-5">
-          {/* user image */}
-          <img
-            className="size-10 rounded-full object-cover mb-4"
-            src={user ? user.profilePicture : "https://via.placeholder.com/150"}
-            alt="User Avatar"
-          />
-          <h1 className="text-3xl font-semibold text-indigo-600 mb-8">
-            Welcome, {user ? user.firstName : "User"}!
-          </h1>
+        <div ref={homeRef} className="flex flex-col gap-4 lg:gap-5">
+          {/* User greeting */}
+          <div className="flex gap-1 items-center">
+            <img
+              className="w-12 h-12 rounded-full object-cover"
+              src={user ? user.profilePicture : "https://via.placeholder.com/150"}
+              alt="User Avatar"
+            />
+            <h1 className="text-3xl font-semibold text-indigo-600">
+              Welcome, {user ? user.firstName : "User"}!
+            </h1>
+          </div>
+          {/* Contact Support Banner */}
+          <motion.div
+            className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm text-indigo-700"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="mb-1">
+              <strong>For withdrawals or inquiries:</strong>
+            </p>
+            <p>Phone: +233 200 80 5961</p>
+            <p>WhatsApp: +233 201 26 6628</p>
+            <p>Email: support@ghanafund.com</p>
+            <p className="mt-1">
+              Our customer support is available 24/7.
+            </p>
+          </motion.div>
         </div>
 
         {/* My Campaigns Section */}
-        <section ref={campaignsRef} className="mb-12">
+        <section ref={campaignsRef} className="mt-8 mb-12">
           <h2 className="text-2xl font-semibold text-indigo-600 mb-6">
             My Campaigns
           </h2>
@@ -157,6 +183,7 @@ const Dashboard = () => {
                 return (
                   <motion.div
                     key={campaign._id}
+                    onClick={() => handleCampaignClick(campaign._id)}
                     className="bg-white rounded-xl p-6 shadow-lg transform transition hover:scale-105 hover:shadow-2xl cursor-pointer"
                     whileHover={{ scale: 1.03 }}
                   >
@@ -168,9 +195,9 @@ const Dashboard = () => {
                     </p>
                     <div className="mb-3 text-sm text-gray-800">
                       <span className="font-bold text-indigo-600">
-                        ${campaign.currentAmount.toLocaleString()}
+                      {currency}{campaign.currentAmount.toLocaleString()}
                       </span>{" "}
-                      raised of ${campaign.goal.toLocaleString()}
+                      raised of {currency}{campaign.goal.toLocaleString()}
                     </div>
                     {/* Progress Bar */}
                     <div className="w-full bg-gray-300 rounded-full h-3 mb-2">
@@ -209,7 +236,8 @@ const Dashboard = () => {
                     {donation.campaign.title}
                   </h3>
                   <p className="text-gray-600 mb-2">
-                    Donation Amount: GH₵ {donation.amount.toLocaleString()}
+                    Donation Amount: GH₵{" "}
+                    {donation.amount.toLocaleString()}
                   </p>
                   {donation.message && (
                     <p className="text-gray-600 text-sm italic">

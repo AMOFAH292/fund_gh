@@ -8,9 +8,50 @@ import ActiveCampaigns from "@/component/landing/ActiveCampaigns";
 import ThankYouMessagesSlider from "@/component/landing/ThankYouMessagesSlider";
 import SuccessfulCampaignsSlider from "@/component/landing/SuccessfulCampaignsSlider";
 import AdvancedAboutSection from "@/component/landing/AdvancedAboutSection";
+import { useEffect, useState } from "react";
 
 
 const Home = () => {
+
+  const [backgroundFilter, setBackgroundFilter] = useState("none");
+
+  useEffect(() => {
+    const updateBackgroundFilter = () => {
+      if (window.innerWidth < 768) {
+        setBackgroundFilter("blur(8px)"); // Apply blur on mobile
+      } else {
+        setBackgroundFilter("blur(8px)"); // Remove blur on larger screens
+      }
+    };
+
+    // Set initial background filter based on screen size
+    updateBackgroundFilter();
+
+    // Listen for window resize events
+    window.addEventListener("resize", updateBackgroundFilter);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", updateBackgroundFilter);
+    };
+  }, []);
+
+
+  const AboutStyle = {
+    backgroundImage: `url(https://media.istockphoto.com/id/2178639991/photo/palms-up-hands-of-a-group-of-multinational-people-african-latin-american-and-european-people.webp?a=1&b=1&s=612x612&w=0&k=20&c=DEyMc-_5KmbzWA6i4T5bSK2UJMCtKrbBmn0hJEwxXlU=)`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
+    filter: backgroundFilter,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: -1,
+  };
+
   return (
     <div className="font-sans">
       <Navbar />
@@ -65,9 +106,12 @@ const Home = () => {
   </div>
 </motion.div> */}
 
-<div>
-  <AdvancedAboutSection/>
-</div>
+<div className="relative" id="menu">
+          <div style={AboutStyle}></div>
+          <div className="relative z-10">
+            <AdvancedAboutSection />
+          </div>
+        </div>
 
 
       {/* External Sliders */}

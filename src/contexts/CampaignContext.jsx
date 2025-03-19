@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 const CampaignContext = createContext();
 
 export const CampaignProvider = ({ children }) => {
+const currency = 'GH₵'
   const { token } = useAuth();
   const [campaigns, setCampaigns] = useState([]);
 
@@ -127,6 +128,7 @@ export const CampaignProvider = ({ children }) => {
         updateCampaign,
         deleteCampaign,
         fetchCampaigns,
+        currency
       }}
     >
       {children}

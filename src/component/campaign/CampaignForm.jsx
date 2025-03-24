@@ -16,6 +16,11 @@ const CreateCampaignForm = () => {
   const [images, setImages] = useState([null, null, null, null]);
   const [previews, setPreviews] = useState([null, null, null, null]);
 
+  // New state for displaying the disclaimer modal
+  const [isDisclaimerOpen, setIsDisclaimerOpen] = useState(false);
+  // State to track if the form is in the process of being submitted
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleImageChange = (index, file) => {
     const newImages = [...images];
     newImages[index] = file;
@@ -26,8 +31,9 @@ const CreateCampaignForm = () => {
     setPreviews(newPreviews);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // This function does the actual submission after the disclaimer is accepted
+  const handleCreateCampaign = async () => {
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -53,13 +59,31 @@ const CreateCampaignForm = () => {
     } else {
       toast.error("Failed to create campaign.");
     }
+    setIsSubmitting(false);
+  };
+
+  // Instead of immediate submission, we open the disclaimer modal
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsDisclaimerOpen(true);
+  };
+
+  // Accepting disclaimer triggers campaign creation
+  const handleDisclaimerAccept = () => {
+    setIsDisclaimerOpen(false);
+    handleCreateCampaign();
+  };
+
+  // Cancelling the modal simply closes it
+  const handleDisclaimerCancel = () => {
+    setIsDisclaimerOpen(false);
   };
 
   // Example list of categories
   const categories = ["Health", "Education", "Environment", "Community"];
 
   return (
-    <div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-gray-50 shadow-2xl rounded-2xl">
+    <div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-white to-gray-50 shadow-2xl rounded-2xl relative">
       <motion.h2
         className="text-3xl font-medium text-gray-800 text-center mb-8"
         initial={{ opacity: 0, y: -20 }}
@@ -179,22 +203,54 @@ const CreateCampaignForm = () => {
             ))}
           </div>
         </div>
-        {/* Informational Disclaimer */}
-        <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-lg text-sm text-indigo-700">
-          After creating your campaign, our team will contact you for verification. Your campaign
-          will remain active during this process. Please note that if your campaign fails the
-          verification process, it will be removed and any donated funds will be refunded.
-        </div>
+        {/* Remove informational disclaimer block from here */}
         {/* Submit Button */}
         <motion.button
           type="submit"
+          disabled={isSubmitting}
           className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          Create Campaign
+          {isSubmitting ? "Submitting..." : "Create Campaign"}
         </motion.button>
       </form>
+
+      {/* Disclaimer Modal */}
+      {isDisclaimerOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <motion.div
+            className="bg-white rounded-lg shadow-xl p-6 z-50 max-w-md mx-auto"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              Disclaimer
+            </h3>
+            <p className="text-gray-700 mb-6 text-sm">
+              After creating your campaign, our team will contact you for verification.
+              Your campaign will remain active during this process. Please note that if your campaign fails
+              the verification process, it will be removed and any donated funds will be refunded.
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handleDisclaimerCancel}
+                className="px-4 py-2 text-gray-700 border rounded hover:bg-gray-100 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDisclaimerAccept}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+              >
+                Accept
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

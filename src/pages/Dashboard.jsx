@@ -54,7 +54,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const [donations, setDonations] = useState([]);
   const [campaignDonations, setCampaignDonations] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   // Refs for sections

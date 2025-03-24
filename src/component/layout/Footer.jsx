@@ -1,5 +1,6 @@
 import { assets } from "@/assets/assets";
 import fundLogo from "@/assets/FundLogo.png";
+import { Facebook, Linkedin, LinkedinIcon, Twitter, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -25,13 +26,10 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <div className="mt-6 flex flex-wrap justify-center gap-4 text-gray-400 text-sm">
-          <a href="#">Pricing</a>
-          <a href="#">About us</a>
-          <a href="#">Features</a>
-          <a href="#">Help Center</a>
-          <a href="#">Contact us</a>
-          <a href="#">FAQs</a>
-          <a href="#">Careers</a>
+          <a className=" hover:text-white transition-all" href="#">About GhanaFund</a>
+          <a className=" hover:text-white transition-all" href="#">Help Center</a>
+          <a className=" hover:text-white transition-all" href="#">Contact us</a>
+          <a className=" hover:text-white transition-all" href="#">FAQs</a>
         </div>
 
         {/* Divider */}
@@ -71,19 +69,19 @@ const Footer = () => {
           {/* Social Media Icons */}
           <div className="flex gap-3 mt-3 md:mt-0">
             <a href="#" className="hover:text-blue-400">
-              🐦
+              <Twitter/>
             </a>{" "}
             {/* Twitter */}
             <a href="#" className="hover:text-blue-600">
-              📘
+              <Facebook/>
             </a>{" "}
             {/* Facebook */}
             <a href="#" className="hover:text-blue-500">
-              🔗
+              <Linkedin/>
             </a>{" "}
             {/* LinkedIn */}
             <a href="#" className="hover:text-red-500">
-              ▶️
+              <Youtube/>
             </a>{" "}
             {/* YouTube */}
           </div>

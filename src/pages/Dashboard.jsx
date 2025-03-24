@@ -12,8 +12,8 @@ const Sidebar = ({ isOpen, toggleSidebar, scrollToSection }) => {
     { name: "Home", section: "home" },
     { name: "My Campaigns", section: "campaigns" },
     { name: "My Donations", section: "donations" },
+    { name: "Campaign Donations", section: "campaignDonations" },
     { name: "Profile", section: "profile" },
-    { name: "Settings", section: "settings" },
   ];
 
   return (
@@ -50,9 +50,10 @@ const Sidebar = ({ isOpen, toggleSidebar, scrollToSection }) => {
 };
 
 const Dashboard = () => {
-  const { campaigns, fetchCampaigns ,currency} = useCampaign();
+  const { campaigns, fetchCampaigns, currency } = useCampaign();
   const { user } = useAuth();
   const [donations, setDonations] = useState([]);
+  const [campaignDonations, setCampaignDonations] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
@@ -60,6 +61,7 @@ const Dashboard = () => {
   const homeRef = useRef(null);
   const campaignsRef = useRef(null);
   const donationsRef = useRef(null);
+  const campaignDonationsRef = useRef(null);
 
   // Toggle sidebar visibility
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -84,7 +86,7 @@ const Dashboard = () => {
     return Math.min(Math.round((current / goal) * 100), 100);
   };
 
-  // Fetch user donations
+  // Fetch donations made by the logged-in user
   useEffect(() => {
     const fetchDonations = async () => {
       try {
@@ -108,6 +110,28 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  // Fetch donations for campaigns created by the logged-in user
+  useEffect(() => {
+    const fetchCampaignDonations = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const { data } = await axios.get(
+          "https://ghanafund-server.onrender.com/api/donations/campaign-donations",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (data.success) {
+          setCampaignDonations(data.donations);
+        }
+      } catch (error) {
+        console.error("Failed to fetch campaign donations", error);
+      }
+    };
+
+    if (user) {
+      fetchCampaignDonations();
+    }
+  }, [user]);
+
   // Scroll handler for sidebar navigation
   const scrollToSection = (section) => {
     if (section === "home" && homeRef.current) {
@@ -118,6 +142,9 @@ const Dashboard = () => {
     }
     if (section === "donations" && donationsRef.current) {
       donationsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    if (section === "campaignDonations" && campaignDonationsRef.current) {
+      campaignDonationsRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -195,9 +222,11 @@ const Dashboard = () => {
                     </p>
                     <div className="mb-3 text-sm text-gray-800">
                       <span className="font-bold text-indigo-600">
-                      {currency}{campaign.currentAmount.toLocaleString()}
+                        {currency}
+                        {campaign.currentAmount.toLocaleString()}
                       </span>{" "}
-                      raised of {currency}{campaign.goal.toLocaleString()}
+                      raised of {currency}
+                      {campaign.goal.toLocaleString()}
                     </div>
                     {/* Progress Bar */}
                     <div className="w-full bg-gray-300 rounded-full h-3 mb-2">
@@ -236,8 +265,7 @@ const Dashboard = () => {
                     {donation.campaign.title}
                   </h3>
                   <p className="text-gray-600 mb-2">
-                    Donation Amount: GH₵{" "}
-                    {donation.amount.toLocaleString()}
+                    Donation Amount: GH₵ {donation.amount.toLocaleString()}
                   </p>
                   {donation.message && (
                     <p className="text-gray-600 text-sm italic">
@@ -253,6 +281,43 @@ const Dashboard = () => {
             </div>
           ) : (
             <p className="text-gray-600">No donation data available yet.</p>
+          )}
+        </section>
+
+        {/* Campaign Donations Section */}
+        <section ref={campaignDonationsRef} className="mt-8">
+          <h2 className="text-2xl font-semibold text-indigo-600 mb-6">
+            Donations to Your Campaigns
+          </h2>
+          {campaignDonations.length ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {campaignDonations.map((donation) => (
+                <motion.div
+                  key={donation._id}
+                  className="bg-white rounded-xl p-6 shadow-lg"
+                >
+                  <h3 className="text-xl font-semibold text-indigo-600 mb-2">
+                    {donation.campaign.title}
+                  </h3>
+                  <p className="text-gray-600 mb-2">
+                    Donation Amount: GH₵ {donation.amount.toLocaleString()}
+                  </p>
+                  {donation.message && (
+                    <p className="text-gray-600 text-sm italic">
+                      "{donation.message}"
+                    </p>
+                  )}
+                  <p className="text-gray-500 text-xs mt-4">
+                    Donated on:{" "}
+                    {new Date(donation.createdAt).toLocaleDateString()}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">
+              No donation messages for your campaigns yet.
+            </p>
           )}
         </section>
       </div>

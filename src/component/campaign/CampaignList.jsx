@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { toast, Toaster } from "react-hot-toast";
 import DeleteModal from "./DeleteModal";
 import Skeleton from "../layout/Skeleton";
+import { MoreVertical } from "lucide-react"; // Import the 3-dots icon
 
 const CampaignList = () => {
   useEffect(() => {
@@ -21,6 +22,9 @@ const CampaignList = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  // State to track which campaign's dropdown is open (mobile)
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Filter state variables
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -29,10 +33,22 @@ const CampaignList = () => {
   // Number of skeleton cards to display when loading
   const skeletonCount = 6;
 
+  // Check if mobile device based on window width
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize(); // initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleDeleteClick = (campaignId, e) => {
     e.stopPropagation();
     setSelectedCampaignId(campaignId);
     setIsDeleteModalOpen(true);
+    // Close the dropdown if open
+    setActiveDropdown(null);
   };
 
   const handleDeleteConfirm = async () => {
@@ -179,39 +195,81 @@ const CampaignList = () => {
                     </div>
                   )}
                 </div>
-                {/* Read Button overlay */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewDetails(campaign._id);
-                    }}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-                  >
-                    Read
-                  </button>
-                </div>
-                {/* Owner options overlay (Edit/Delete) */}
-                {isOwner && (
-                  <div className="absolute inset-0 bg-black/20 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="flex justify-end items-center space-x-4 p-4">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/edit-campaign/${campaign._id}`);
-                        }}
-                        className="text-white text-sm hover:underline focus:outline-none"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={(e) => handleDeleteClick(campaign._id, e)}
-                        className="text-white text-sm hover:underline focus:outline-none"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                {/* Read Button overlay for larger screens */}
+                {!isMobile && (
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewDetails(campaign._id);
+                      }}
+                      className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Read
+                    </button>
                   </div>
+                )}
+                {/* Owner options */}
+                {isOwner && (
+                  <>
+                    {isMobile ? (
+                      // On mobile, show a three-dots icon
+                      <div className="absolute top-2 right-2 z-10">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveDropdown((prev) =>
+                              prev === campaign._id ? null : campaign._id
+                            );
+                          }}
+                          className="p-2 bg-black/50 rounded-full text-white"
+                        >
+                          <MoreVertical size={20} />
+                        </button>
+                        {activeDropdown === campaign._id && (
+                          <div className="absolute right-0 mt-2 w-28 bg-white rounded shadow-lg z-20">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/edit-campaign/${campaign._id}`);
+                                setActiveDropdown(null);
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteClick(campaign._id, e)}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      // On desktop, display the overlay on hover
+                      <div className="absolute inset-0 bg-black/20 flex flex-col justify-end transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+                        <div className="flex justify-end items-center space-x-4 p-4">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/edit-campaign/${campaign._id}`);
+                            }}
+                            className="text-white text-sm hover:underline focus:outline-none"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteClick(campaign._id, e)}
+                            className="text-white text-sm hover:underline focus:outline-none"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </motion.div>
             );

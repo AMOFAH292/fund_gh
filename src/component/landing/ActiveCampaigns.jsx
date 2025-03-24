@@ -103,9 +103,7 @@ const ActiveCampaigns = () => {
       </div>
       {/* Mobile Horizontal Scroll */}
       <div className="md:hidden">
-        <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
-          Active Campaigns
-        </h3>
+        
         <div className="flex gap-4 overflow-x-auto pb-4">
           {campaigns.length > 0
             ? campaigns.map((campaign) => (

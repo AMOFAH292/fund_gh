@@ -39,7 +39,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm">
           {/* Logo */}
            <a href="/" className="text-2xl font-bold flex items-center">
-                    <img src={fundLogo} alt="Logo" className="w-10 h-10 mr-2" />
+                    <img src={assets.siteLogo} alt="Logo" className="size-16 mr-2" />
                     GhanaFund
                   </a>
           

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { toast, Toaster } from "react-hot-toast";
 import DeleteModal from "./DeleteModal";
 import Skeleton from "../layout/Skeleton";
-import { MoreVertical } from "lucide-react"; // Import the 3-dots icon
+import { MoreVertical, Share2 } from "lucide-react"; // Import the 3-dots and share icons
 
 const CampaignList = () => {
   useEffect(() => {
@@ -84,6 +84,13 @@ const CampaignList = () => {
 
   const handleViewDetails = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
+  };
+
+  // New share handler: copies the campaign URL to the clipboard.
+  const handleShare = (campaign) => {
+    const shareUrl = `${window.location.origin}/campaign/${campaign._id}`;
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Campaign URL copied to clipboard!");
   };
 
   // Filter campaigns based on selected category and search term
@@ -195,6 +202,18 @@ const CampaignList = () => {
                     </div>
                   )}
                 </div>
+                {/* Share Icon at top-left */}
+                <div className="absolute top-2 left-2 z-10">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleShare(campaign);
+                    }}
+                    className="p-2 bg-black/50 rounded-full text-white"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                </div>
                 {/* Read Button overlay for larger screens */}
                 {!isMobile && (
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -213,7 +232,7 @@ const CampaignList = () => {
                 {isOwner && (
                   <>
                     {isMobile ? (
-                      // On mobile, show a three-dots icon
+                      // On mobile, show a three-dots icon with dropdown including Edit and Delete options
                       <div className="absolute top-2 right-2 z-10">
                         <button
                           onClick={(e) => {

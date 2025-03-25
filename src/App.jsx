@@ -21,6 +21,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./component/auth/ProfilePage";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import AboutPage from "./pages/AboutPage";
 
 const AppContent = () => {
   const location = useLocation();
@@ -43,10 +44,12 @@ const AppContent = () => {
         <Route path="/campaigns" element={<CampaignList />} />
         <Route path="/campaign/:campaignId" element={<CampaignDetailPage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
+        <Route path="/learn-more" element={<AboutPage />} />
         <Route
           path="/edit-campaign/:campaignId"
           element={<EditCampaignForm />}
         />
+        
         <Route path="/dashboard" element={<Dashboard />} />
         //404 page
         <Route path="*" element={<NotFoundPage />} />

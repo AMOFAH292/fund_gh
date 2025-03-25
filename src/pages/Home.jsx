@@ -68,8 +68,7 @@ const Home = () => {
             Funding great causes made easy
           </h2>
           <p className="text-base md:text-lg text-white mt-4 max-w-xl">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi
-            magni hic officia.
+          Together, We Build Ghana’s Tomorrow—One Dream, One Donation
           </p>
           <Link
             to={"/create-campaign-form"}

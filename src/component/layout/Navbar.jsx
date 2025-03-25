@@ -6,6 +6,7 @@ import LoginModal from "@/component/auth/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import ConfirmLogoutModal from "../auth/ConfirmLogoutModal";
 import { useNavigate } from "react-router-dom";
+import { assets } from "@/assets/assets";
 
 const Navbar = () => {
   const { token, logout } = useAuth();
@@ -51,7 +52,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-md px-6 py-4 fixed top-0 left-0 w-full z-50">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <a href="/" className="text-2xl font-bold flex items-center">
-          <img src={fundLogo} alt="Logo" className="w-10 h-10 mr-2" />
+          <img src={assets.siteLogo} alt="Logo" className="size-16 mr-2" />
           GhanaFund
         </a>
 
